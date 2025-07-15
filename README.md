@@ -27,13 +27,13 @@ Simple REST API menggunakan Express, TypeScript, dan MySQL.
 1. **Clone repo**
 
 ```bash
-git clone https://github.com/username/simple-backend-with-express.git
+git clone https://github.com/ryanz23/simple-backend-with-express.git
 ```
 
 2. **Buka folder**
 
 ```bash
-cd backend-typescript-mysql
+cd simple-backend-with-express
 ```
 
 3. **Install dependencies**
