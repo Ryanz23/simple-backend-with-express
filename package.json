@@ -1,0 +1,43 @@
+{
+  "name": "backend-typescript-mysql",
+  "version": "1.0.0",
+  "description": "Backend TypeScript dengan Express.js dan MySQL",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "watch": "tsc --watch",
+    "clean": "rm -rf dist",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint . --ext .ts"
+  },
+  "keywords": [
+    "typescript",
+    "express",
+    "mysql",
+    "backend"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mysql2": "^3.6.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.31.0",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.5.0",
+    "@typescript-eslint/eslint-plugin": "^8.37.0",
+    "@typescript-eslint/parser": "^8.37.0",
+    "eslint": "^9.31.0",
+    "globals": "^16.3.0",
+    "prettier": "3.6.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.2.2",
+    "typescript-eslint": "^8.37.0"
+  }
+}
