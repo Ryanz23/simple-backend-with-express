@@ -8,7 +8,7 @@ export function sendSuccess<T>(
   res: Response<ApiResponse<T>>,
   data?: T,
   message = 'Success',
-  count?: number
+  count?: number,
 ) {
   const payload: ApiResponse<T> = {
     success: true,
@@ -25,7 +25,7 @@ export function sendSuccess<T>(
 export function sendError(
   res: Response<ApiResponse<unknown>>,
   statusCode = 500,
-  errorMessage = 'Internal Server Error'
+  errorMessage = 'Internal Server Error',
 ) {
   return res.status(statusCode).json({
     success: false,

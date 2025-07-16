@@ -16,8 +16,12 @@ router.get(
       const db = await getDb();
       const [rows] = await db.execute('SELECT * FROM criteria');
 
-      return sendSuccess(res, rows as Criterion[], 'Criteria fetched successfully', (rows as Criterion[]).length);
-
+      return sendSuccess(
+        res,
+        rows as Criterion[],
+        'Criteria fetched successfully',
+        (rows as Criterion[]).length,
+      );
     } catch (err) {
       console.error(err);
       return sendError(res, 500, 'Failed to fetch criteria.');
@@ -33,8 +37,12 @@ router.get(
       const db = await getDb();
       const [rows] = await db.execute('SELECT * FROM alternatives');
 
-      return sendSuccess(res, rows as AlternativeRow[], 'Alternatives fetched successfully', (rows as AlternativeRow[]).length);
-
+      return sendSuccess(
+        res,
+        rows as AlternativeRow[],
+        'Alternatives fetched successfully',
+        (rows as AlternativeRow[]).length,
+      );
     } catch (err) {
       console.error(err);
       return sendError(res, 500, 'Failed to fetch alternatives.');
@@ -59,8 +67,12 @@ router.get(
             JOIN criteria c ON s.criterion_id = c.id
         `);
 
-      return sendSuccess(res, rows as ScoreRow[], 'Scores fetched successfully', (rows as ScoreRow[]).length);
-
+      return sendSuccess(
+        res,
+        rows as ScoreRow[],
+        'Scores fetched successfully',
+        (rows as ScoreRow[]).length,
+      );
     } catch (err) {
       console.error(err);
       return sendError(res, 500, 'Failed to fetch scores.');
@@ -86,7 +98,6 @@ router.post('/criteria', async (req: Request, res: Response<ApiResponse>) => {
     );
 
     return sendSuccess(res, undefined, 'Criterion added successfully.');
-
   } catch (err) {
     console.error(err);
     return sendError(res, 500, 'Failed to add criterion.');
@@ -113,7 +124,6 @@ router.post(
       ]);
 
       return sendSuccess(res, undefined, 'Alternative added successfully.');
-
     } catch (err) {
       console.error(err);
       return sendError(res, 500, 'Failed to add alternative.');
@@ -130,7 +140,11 @@ router.post('/scores', async (req: Request, res: Response<ApiResponse>) => {
     typeof criterion_id !== 'string' ||
     typeof score !== 'number'
   ) {
-    return sendError(res, 400, 'Alternative ID, Criterion ID, and Score are required.');
+    return sendError(
+      res,
+      400,
+      'Alternative ID, Criterion ID, and Score are required.',
+    );
   }
 
   const id = uuidv4(); // Generate a unique ID for the score
@@ -143,10 +157,105 @@ router.post('/scores', async (req: Request, res: Response<ApiResponse>) => {
     );
 
     return sendSuccess(res, undefined, 'Score added successfully.');
-
   } catch (err) {
     console.error(err);
     return sendError(res, 500, 'Failed to add score.');
+  }
+});
+
+// PUT routes for editing criteria
+router.put(
+  '/criteria/:id',
+  async (req: Request, res: Response<ApiResponse>) => {
+    const { id } = req.params;
+    const { name, weight } = req.body;
+
+    if (!name || typeof weight !== 'number') {
+      return sendError(res, 400, 'Name and weight are required');
+    }
+
+    try {
+      const db = await getDb();
+      const [result] = await db.execute(
+        'UPDATE criteria SET name = ?, weight = ? WHERE id = ?',
+        [name, weight, id],
+      );
+
+      const affectedRows = (result as { affectedRows: number }).affectedRows;
+
+      if (affectedRows === 0) {
+        return sendError(res, 404, 'Criterion not found.');
+      }
+
+      return sendSuccess(res, undefined, 'Criterion updated successfully.');
+    } catch (err) {
+      console.error(err);
+      return sendError(res, 500, 'Failed to update criterion.');
+    }
+  },
+);
+
+// PUT routes for editing alternatives
+router.put(
+  '/alternatives/:id',
+  async (req: Request, res: Response<ApiResponse>) => {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    if (!name) {
+      return sendError(res, 400, 'Name is required.');
+    }
+
+    try {
+      const db = await getDb();
+      const [result] = await db.execute(
+        'UPDATE alternatives SET name = ? WHERE id = ?',
+        [name, id],
+      );
+
+      const affectedRows = (result as { affectedRows: number }).affectedRows;
+
+      if (affectedRows === 0) {
+        return sendError(res, 404, 'Alternative not found.');
+      }
+
+      return sendSuccess(res, undefined, 'Alternative updated successfully.');
+    } catch (err) {
+      console.error(err);
+      return sendError(res, 500, 'Failed to update alternative.');
+    }
+  },
+);
+
+// PUT routes for editing scores
+router.put('/scores', async (req: Request, res: Response<ApiResponse>) => {
+  const { alternative_id, criterion_id, score } = req.body;
+
+  if (!alternative_id || !criterion_id || typeof score !== 'number') {
+    return sendError(
+      res,
+      400,
+      'Alteenative ID, Criterion ID, and Score are required.',
+    );
+  }
+
+  try {
+    const db = await getDb();
+    const [result] = await db.execute(
+      'UPDATE scores SET score = ? WHERE alternative_id = ? AND criterion_id = ?',
+      [score, alternative_id, criterion_id],
+    );
+
+    const affectedRows = (result as { affectedRows: number }).affectedRows;
+
+    if (affectedRows === 0) {
+      return sendError(res, 404, 'Score not found.');
+    }
+
+    return sendSuccess(res, undefined, 'Score updated successfully.');
+  } catch (err) {
+    console.error(err);
+    return sendError(res, 500, 'Failed to update score.');
   }
 });
 
@@ -157,55 +266,58 @@ router.delete(
     const { id } = req.params;
 
     if (!id) {
-        return sendError(res, 400, 'Criterion ID is required.');
+      return sendError(res, 400, 'Criterion ID is required.');
     }
 
     try {
-        const db = await getDb();
-        const [result] = await db.execute('DELETE FROM criteria WHERE id = ?', [id]);
+      const db = await getDb();
+      const [result] = await db.execute('DELETE FROM criteria WHERE id = ?', [
+        id,
+      ]);
 
-        // Check if any rows were affected
-        const affectedRows = (result as { affectedRows: number }).affectedRows;
-        if (affectedRows === 0) {
-            return sendError(res, 404, 'Criterion not found.');
-        }
+      // Check if any rows were affected
+      const affectedRows = (result as { affectedRows: number }).affectedRows;
+      if (affectedRows === 0) {
+        return sendError(res, 404, 'Criterion not found.');
+      }
 
-        return sendSuccess(res, undefined, 'Criterion deleted successfully.');
-
+      return sendSuccess(res, undefined, 'Criterion deleted successfully.');
     } catch (err) {
-        console.error(err);
-        return sendError(res, 500, 'Failed to delete criterion.');
+      console.error(err);
+      return sendError(res, 500, 'Failed to delete criterion.');
     }
-  }
+  },
 );
 
 // DELETE routes for deleting alternatives
 router.delete(
-    '/alternatives/:id',
-    async (req: Request, res: Response<ApiResponse>) => {
+  '/alternatives/:id',
+  async (req: Request, res: Response<ApiResponse>) => {
     const { id } = req.params;
 
     if (!id) {
-        return sendError(res, 400, 'Alternative ID is required.');
+      return sendError(res, 400, 'Alternative ID is required.');
     }
 
     try {
-        const db = await getDb();
-        const [result] = await db.execute('DELETE FROM alternatives WHERE id = ?', [id]);
+      const db = await getDb();
+      const [result] = await db.execute(
+        'DELETE FROM alternatives WHERE id = ?',
+        [id],
+      );
 
-        // Check if any rows were affected
-        const affectedRows = (result as { affectedRows: number }).affectedRows;
-        if (affectedRows === 0) {
-            return sendError(res, 404, 'Alternative not found.');
-        }
+      // Check if any rows were affected
+      const affectedRows = (result as { affectedRows: number }).affectedRows;
+      if (affectedRows === 0) {
+        return sendError(res, 404, 'Alternative not found.');
+      }
 
-        return sendSuccess(res, undefined, 'Alternative deleted successfully.');
-
+      return sendSuccess(res, undefined, 'Alternative deleted successfully.');
     } catch (err) {
-        console.error(err);
-        return sendError(res, 500, 'Failed to delete alternative.');
+      console.error(err);
+      return sendError(res, 500, 'Failed to delete alternative.');
     }
-    }
+  },
 );
 
 // DELETE routes for deleting scores
@@ -220,13 +332,17 @@ router.delete('/scores', async (req: Request, res: Response<ApiResponse>) => {
     const db = await getDb();
     const [result] = await db.execute(
       'DELETE FROM scores WHERE alternative_id = ? AND criterion_id = ?',
-      [alternative_id, criterion_id]
+      [alternative_id, criterion_id],
     );
 
     const affectedRows = (result as { affectedRows: number }).affectedRows;
 
     if (affectedRows === 0) {
-      return sendError(res, 404, 'Score not found for the given alternative and criterion.');
+      return sendError(
+        res,
+        404,
+        'Score not found for the given alternative and criterion.',
+      );
     }
 
     return sendSuccess(res, undefined, 'Score deleted successfully.');

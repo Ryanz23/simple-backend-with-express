@@ -87,7 +87,9 @@ router.post('/', async (req: Request, res: Response<ApiResponse<User>>) => {
     } else {
       console.error('Unknown error:', error);
     }
-    return res.status(500).json({ success: false, error: 'Internal server error.' });
+    return res
+      .status(500)
+      .json({ success: false, error: 'Internal server error.' });
   }
 });
 
@@ -134,7 +136,9 @@ router.put(
       } else {
         console.error(error);
       }
-      return res.status(500).json({ success: false, error: 'Internal server error' });
+      return res
+        .status(500)
+        .json({ success: false, error: 'Internal server error' });
     }
   },
 );
@@ -165,7 +169,9 @@ router.delete(
       } else {
         console.error('Unknown error:', error);
       }
-      return res.status(500).json({ success: false, error: 'Internal server error' });
+      return res
+        .status(500)
+        .json({ success: false, error: 'Internal server error' });
     }
   },
 );

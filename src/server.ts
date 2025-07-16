@@ -22,10 +22,14 @@ app.use('/smart', smartRouter);
 
 // Health check route
 app.get('/health', (req: Request, res: Response) => {
-  sendSuccess(res, {
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-  }, 'Server is running');
+  sendSuccess(
+    res,
+    {
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+    },
+    'Server is running',
+  );
 });
 
 // 404 Handler
