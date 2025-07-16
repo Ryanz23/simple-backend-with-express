@@ -42,7 +42,7 @@ router.get(
     if (!user)
       return res.status(404).json({ success: false, error: 'User not found.' });
 
-    res.json({ success: true, data: user });
+    return res.json({ success: true, data: user });
   },
 );
 
@@ -71,7 +71,7 @@ router.post('/', async (req: Request, res: Response<ApiResponse<User>>) => {
       [id, name, email],
     );
     const insertId = (result as { insertId: number }).insertId;
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       data: { id: insertId, name, email },
       message: 'User created successfully.',
@@ -87,7 +87,7 @@ router.post('/', async (req: Request, res: Response<ApiResponse<User>>) => {
     } else {
       console.error('Unknown error:', error);
     }
-    res.status(500).json({ success: false, error: 'Internal server error.' });
+    return res.status(500).json({ success: false, error: 'Internal server error.' });
   }
 });
 
@@ -122,7 +122,7 @@ router.put(
           .status(404)
           .json({ success: false, error: 'User not found' });
 
-      res.json({ success: true, message: 'User updated successfully' });
+      return res.json({ success: true, message: 'User updated successfully' });
     } catch (error: unknown) {
       if (isError(error)) {
         if (error.message.includes('ER_DUP_ENTRY')) {
@@ -134,7 +134,7 @@ router.put(
       } else {
         console.error(error);
       }
-      res.status(500).json({ success: false, error: 'Internal server error' });
+      return res.status(500).json({ success: false, error: 'Internal server error' });
     }
   },
 );
@@ -158,14 +158,14 @@ router.delete(
           .status(404)
           .json({ success: false, error: 'User not found' });
 
-      res.json({ success: true, message: 'User deleted successfully' });
+      return res.json({ success: true, message: 'User deleted successfully' });
     } catch (error: unknown) {
       if (isError(error)) {
         console.error('Database error:', error.message);
       } else {
         console.error('Unknown error:', error);
       }
-      res.status(500).json({ success: false, error: 'Internal server error' });
+      return res.status(500).json({ success: false, error: 'Internal server error' });
     }
   },
 );

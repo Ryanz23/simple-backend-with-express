@@ -1,9 +1,10 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import userRoutes from './routes/users';
 import initDatabase from './config/database';
 import smartRouter from './routes/smart';
+import { sendSuccess, sendError } from './utils/responseHelper';
 
 // Load environment variables
 dotenv.config();
@@ -21,31 +22,21 @@ app.use('/smart', smartRouter);
 
 // Health check route
 app.get('/health', (req: Request, res: Response) => {
-  res.json({
-    success: true,
-    message: 'Server is running',
-    data: {
-      timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
-    },
-  });
+  sendSuccess(res, {
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+  }, 'Server is running');
 });
 
 // 404 Handler
 app.use((req: Request, res: Response) => {
-  res.status(404).json({
-    success: false,
-    error: 'The requested resource could not be found.',
-  });
+  sendError(res, 404, 'The requested resource could not be found.');
 });
 
-// Global error handler
-app.use((err: Error, req: Request, res: Response) => {
+// Global error handler (must have 4 params!)
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error('Unhandled Error:', err);
-  res.status(500).json({
-    success: false,
-    error: 'Internal server error.',
-  });
+  sendError(res, 500, 'Internal server error.');
 });
 
 // Start the server
