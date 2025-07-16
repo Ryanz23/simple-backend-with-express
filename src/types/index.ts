@@ -1,4 +1,3 @@
-// src/types/index.ts
 export interface User {
   id?: number;
   name: string;
@@ -24,6 +23,17 @@ export interface DatabaseConfig {
 export interface UserParams {
   id: string;
 }
+
+export interface Criterion {
+  name: string;
+  weight: number;
+}
+
+export interface Alternative {
+  name: string;
+  scores: Record<string, number>; // Criterion name to score mapping
+}
+
 export interface AlternativeRow {
   id: number;
   name: string;
@@ -32,6 +42,15 @@ export interface AlternativeRow {
 export interface ScoreRow {
   alternative_id: number;
   alternative_name: string;
+  criterion_name: string;
+  score: number;
+}
+
+export interface ScoreDetail {
+  id: string;
+  alternative_id: string;
+  alternative_name: string;
+  criterion_id: string;
   criterion_name: string;
   score: number;
 }

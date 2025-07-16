@@ -6,11 +6,38 @@ Simple REST API menggunakan Express, TypeScript, dan MySQL.
 
 ## Fitur
 
-- CRUD data user (`/users`)
-- Validasi input dan error handling
-- CORS enabled
-- Environment variables dengan `.env`
-- Struktur project modular
+### User Namagement (`/users`)
+
+- Tambah user
+- Lihat daftar user
+- Update user
+- Hapus user
+- Validasi input (email, name)
+- Error handling lengkap (404, 500, invalid format)
+
+### Sistem Pendukung Keputusan (SPK) - Metode SMART (`/smart`)
+
+- Tambah **kriteria** dengan bobot (`/smart/criteria`)
+- Tambah **alternatif** pilihan (`/smart/alternatives`)
+- Input **skor** tiap alternatif terhadap semua kriteria (`/smart/scores`)
+- Hitung **peringkat alternatif** berdasarkan metode **SMART**
+- Response berupa urutan alternatif dari nilai tertinggi ke terendah
+
+### Konfigurasi
+
+- `CORS` aktif untuk integrasi frontend terpisah
+- Gunakan `.env` untuk konfigurasi database & port
+- Struktur modular:
+  - `routes/`, `controllers/`, `config/`, `types/`, `utils/`
+- Gunakan `UUID v4` untuk ID unik pada:
+  - User
+  - Criteria
+  - Alternatives
+  - Scores
+
+### Endpoint Cek Kesehatan Server
+
+- `GET /health` untuk memastikan server berjalan normal
 
 ---
 

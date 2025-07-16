@@ -1,17 +1,9 @@
-export interface Criterion {
-  name: string;
-  weight: number;
-}
-
-export interface Alternative {
-  name: string;
-  scores: Record<string, number>; // Criterion name to score mapping
-}
+import { Criterion, Alternative } from '../types';
 
 export function calculateSMART(
   alternatives: Alternative[],
   criteria: Criterion[],
-) {
+): { name: string; finalScore: number }[] {
   const totalWeight = criteria.reduce((sum, c) => sum + c.weight, 0);
 
   return alternatives

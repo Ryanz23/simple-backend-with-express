@@ -1,17 +1,17 @@
-import { Request, Response } from "express";
-import { getDb } from "../config/database";
-import { calculateSMART, Criterion, Alternative } from "../utils/smart";
-import { AlternativeRow, ScoreRow } from "../types";
+import { Request, Response } from 'express';
+import { getDb } from '../config/database';
+import { calculateSMART } from '../utils/smart';
+import { Criterion, Alternative, AlternativeRow, ScoreRow } from '../types';
 
 export const calculateSmart = async (_req: Request, res: Response) => {
   try {
     const db = await getDb();
 
-    const [criteriaRaw] = await db.execute("SELECT name, weight FROM criteria");
+    const [criteriaRaw] = await db.execute('SELECT name, weight FROM criteria');
     const criteria = criteriaRaw as Criterion[];
 
     const alternativesRaw = (
-      await db.execute("SELECT * FROM alternatives")
+      await db.execute('SELECT * FROM alternatives')
     )[0] as AlternativeRow[];
     const [scoresRaw] = await db.execute(`
       SELECT a.id AS alternative_id, a.name AS alternative_name, c.name AS criterion_name, s.score
@@ -39,7 +39,7 @@ export const calculateSmart = async (_req: Request, res: Response) => {
     const result = calculateSMART(alternatives, criteria);
     res.json({ success: true, data: result });
   } catch (err) {
-    console.error("[SMART ERROR]", err);
-    res.status(500).json({ success: false, error: "Gagal menghitung SMART" });
+    console.error('[SMART ERROR]', err);
+    res.status(500).json({ success: false, error: 'Gagal menghitung SMART' });
   }
 };

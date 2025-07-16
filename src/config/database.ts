@@ -1,13 +1,13 @@
-import mysql from "mysql2/promise";
-import dotenv from "dotenv";
+import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
 const dbConfig = {
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "",
-  database: process.env.DB_NAME || "simple_db",
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'simple_db',
 };
 
 let connection: mysql.Connection;
@@ -22,7 +22,7 @@ export async function getDb() {
 export default async function initDatabase(): Promise<void> {
   try {
     connection = await mysql.createConnection(dbConfig);
-    console.log("Database connection established successfully.");
+    console.log('Database connection established successfully.');
 
     const createTableQuery = `
         CREATE TABLE IF NOT EXISTS users (
@@ -59,10 +59,10 @@ export default async function initDatabase(): Promise<void> {
       )`;
     await connection.execute(createScoresTable);
 
-    console.log("Users table is ready.");
-    console.log("SPK tables (criteria, alternatives, scores) are ready.");
+    console.log('Users table is ready.');
+    console.log('SPK tables (criteria, alternatives, scores) are ready.');
   } catch (error) {
-    console.error("Error initializing database:", error);
+    console.error('Error initializing database:', error);
     process.exit(1);
   }
 }

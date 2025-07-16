@@ -1,9 +1,9 @@
-import express, { Request, Response } from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import userRoutes from "./routes/users";
-import initDatabase from "./config/database";
-import smartRouter from "./routes/smart";
+import express, { Request, Response } from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import userRoutes from './routes/users';
+import initDatabase from './config/database';
+import smartRouter from './routes/smart';
 
 // Load environment variables
 dotenv.config();
@@ -16,14 +16,14 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/users", userRoutes);
-app.use("/smart", smartRouter);
+app.use('/users', userRoutes);
+app.use('/smart', smartRouter);
 
 // Health check route
-app.get("/health", (req: Request, res: Response) => {
+app.get('/health', (req: Request, res: Response) => {
   res.json({
     success: true,
-    message: "Server is running",
+    message: 'Server is running',
     data: {
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
@@ -35,16 +35,16 @@ app.get("/health", (req: Request, res: Response) => {
 app.use((req: Request, res: Response) => {
   res.status(404).json({
     success: false,
-    error: "The requested resource could not be found.",
+    error: 'The requested resource could not be found.',
   });
 });
 
 // Global error handler
 app.use((err: Error, req: Request, res: Response) => {
-  console.error("Unhandled Error:", err);
+  console.error('Unhandled Error:', err);
   res.status(500).json({
     success: false,
-    error: "Internal server error.",
+    error: 'Internal server error.',
   });
 });
 
@@ -55,11 +55,11 @@ async function startServer() {
 
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
-      console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
+      console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`Database: ${process.env.DB_NAME}`);
     });
   } catch (error) {
-    console.error("Failed to start the server:", error);
+    console.error('Failed to start the server:', error);
     process.exit(1);
   }
 }
