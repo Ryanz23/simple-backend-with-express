@@ -24,3 +24,14 @@ export interface DatabaseConfig {
 export interface UserParams {
   id: string;
 }
+export interface AlternativeRow {
+  id: number;
+  name: string;
+}
+
+export interface ScoreRow {
+  alternative_id: number;
+  alternative_name: string;
+  criterion_name: string;
+  score: number;
+}

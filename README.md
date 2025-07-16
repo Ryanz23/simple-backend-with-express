@@ -74,7 +74,38 @@ NODE_ENV=development
 npm run dev
 ```
 
+---
+
+## Struktur Folder
+
+```bash
+simple-backend-with-express/
+├── src/
+│   ├── config/
+│   │   └── database.ts
+│   ├── controllers/
+│   ├── └── smart.controller.ts
+│   ├── routes/
+│   │   ├── smart.ts
+│   │   └── users.ts
+│   ├── types/
+│   │   └── index.ts
+│   ├── utils/
+│   │   └── smart.ts
+│   └── server.ts
+├── .eslintrc.json
+├── .gitignore
+├── eslint.config.mjs
+├── package-lock.json
+├── package.json
+├── README.md
+└── tsconfig.json
+```
+
+---
+
 ## Kolaborasi
+
 Proyek ini terbuka untuk kontribusi dan kolaborasi! Kalau kamu punya ide fitur baru, perbaikan, atau ingin diskusi soal pengembangan, jangan ragu buat buka issue atau pull request di GitHub.
 
 &copy; 2025 Ryanz23
